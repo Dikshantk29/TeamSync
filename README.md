@@ -1,6 +1,10 @@
 # 🌟 Advanced MERN B2B Teams Project Management SaaS - *TeamSync*  
-[live]([https://team-sync-frontend-part.vercel.app/])
-(https://github.com/user-attachments/assets/b388a3bd-d75a-4be0-b013-f331c4ff6a7b)
+
+![Team Sync UI](https://github.com/user-attachments/assets/b388a3bd-d75a-4be0-b013-f331c4ff6a7b)
+
+## 🚀 Live Demo
+
+🔗 [View Live App](https://team-sync-frontend-part.vercel.app/)
 
 
 ## 📌 Project Overview  
