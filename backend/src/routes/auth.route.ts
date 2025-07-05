@@ -21,6 +21,8 @@ authRoutes.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
+    // Use session false to avoid storing user data in session
+    session: false,
   })
 );
 
@@ -28,6 +30,8 @@ authRoutes.get(
   "/google/callback",
   passport.authenticate("google", {
     failureRedirect: failedUrl,
+    // Use session false to avoid storing user data in session
+    session: false,
   }),
   googleLoginCallback
 );

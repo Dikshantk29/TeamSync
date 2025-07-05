@@ -205,13 +205,12 @@ export const createTaskMutationFn = async ({
   return response.data;
 };
 
-
 export const editTaskMutationFn = async ({
   taskId,
   projectId,
   workspaceId,
   data,
-}: EditTaskPayloadType): Promise<{message: string;}> => {
+}: EditTaskPayloadType): Promise<{ message: string }> => {
   const response = await API.put(
     `/task/${taskId}/project/${projectId}/workspace/${workspaceId}/update/`,
     data

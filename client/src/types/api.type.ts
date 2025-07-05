@@ -7,6 +7,7 @@ import {
 export type loginType = { email: string; password: string };
 export type LoginResponseType = {
   message: string;
+  access_token: string;
   user: {
     _id: string;
     currentWorkspace: string;
@@ -226,7 +227,6 @@ export type CreateTaskPayloadType = {
   };
 };
 
-
 //added new for edtiting of task
 export type EditTaskPayloadType = {
   taskId: string;
@@ -241,7 +241,6 @@ export type EditTaskPayloadType = {
     dueDate: string;
   }>;
 };
-
 
 export type TaskType = {
   _id: string;

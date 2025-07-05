@@ -1,15 +1,28 @@
 import passport from "passport";
 import { Request } from "express";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import {
+  Strategy as GoogleStrategy,
+  Strategy,
+  // StrategyOptions,
+  StrategyOptions as GoogleStrategyOptions,
+} from "passport-google-oauth20";
 import { Strategy as LocalStrategy } from "passport-local";
+import {
+  Strategy as JwtStrategy,
+  ExtractJwt,
+  // StrategyOptions
+  StrategyOptions as JwtStrategyOptions,
+} from "passport-jwt";
 
 import { config } from "./app.config";
 import { NotFoundException } from "../utils/appError";
 import { ProviderEnum } from "../enums/account-provider.enum";
 import {
+  findUserByIdService,
   loginOrCreateAccountService,
   verifyUserService,
 } from "../services/auth.service";
+import { SignJwtToken } from "../utils/jwt";
 
 passport.use(
   new GoogleStrategy(
@@ -36,6 +49,11 @@ passport.use(
           picture: picture,
           email: email,
         });
+
+        const jwt = SignJwtToken({
+          userId: user._id,
+        });
+        req.jwt = jwt; // Attach JWT to request object
         done(null, user);
       } catch (error) {
         done(error, false);
@@ -49,7 +67,8 @@ passport.use(
     {
       usernameField: "email",
       passwordField: "password",
-      session: true,
+      // Use session false to avoid storing user data in session
+      session: false,
     },
     async (email, password, done) => {
       try {
@@ -62,5 +81,35 @@ passport.use(
   )
 );
 
+interface JwtPayload {
+  userId: string;
+}
+
+// const options: StrategyOptions = {
+const options: JwtStrategyOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: config.JWT_SECRET,
+  audience: ["user"],
+  algorithms: ["HS256"],
+};
+
+passport.use(
+  new JwtStrategy(options, async (Payload: JwtPayload, done) => {
+    try {
+      const user = await findUserByIdService(Payload.userId);
+      if (!user) {
+        return done(null, false);
+      }
+      return done(null, user);
+    } catch (error) {
+      return done(error, false);
+    }
+  })
+);
+
 passport.serializeUser((user: any, done) => done(null, user));
 passport.deserializeUser((user: any, done) => done(null, user));
+
+export const passportAuthenticateJWT = passport.authenticate("jwt", {
+  session: false,
+});

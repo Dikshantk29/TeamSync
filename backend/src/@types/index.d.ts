@@ -5,5 +5,8 @@ declare global {
     interface User extends UserDocument {
       _id?: any;
     }
+    interface Request {
+      jwt?: string; // JWT token attached to the request
+    }
   }
 }
